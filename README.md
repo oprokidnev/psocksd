@@ -49,6 +49,9 @@ $ php psocksd.phar socks5://localhost:9050
 
 # require client to send the given authentication information
 $ php psocksd.phar socks5://username:password@localhost:9051
+
+# require client to send the given authentication information via another proxy
+$ php psocksd.phar socks5://username:password@localhost:9051 socks5://username:password@some-proxy:9051
 ```
 
 ### Interactive CLI

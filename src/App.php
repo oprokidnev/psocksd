@@ -45,7 +45,7 @@ class App
     {
         $that = $this;
         $commander = new Router();
-        $main = $commander->add('[<socket>] [--no-interaction | -n]', function ($args) use ($that) {
+        $main = $commander->add('[<socket>] [<relay>] [--no-interaction | -n]', function ($args) use ($that) {
             $that->start($args);
         });
         $commander->add('[--help | -h]', function () use ($main) {
@@ -66,6 +66,7 @@ class App
         // apply default settings for arguments
         $args += array(
             'socket' => 'socks://localhost:9050',
+            'relay' => 'none',
             'measureTraffic' => true,
             'measureTime' => true,
             'interactive' => DIRECTORY_SEPARATOR === '/' && !isset($args['no-interaction']) && !isset($args['n']) && defined('STDIN') && is_resource(STDIN),
@@ -115,7 +116,7 @@ class App
         $this->resolver = $dns = $dnsResolverFactory->createCached('8.8.8.8', $loop);
 
         $this->via = new ConnectionManagerSelective();
-        $this->via->addConnectionManagerFor($this->createConnectionManager('none'), '*', '*', self::PRIORITY_DEFAULT);
+        $this->via->addConnectionManagerFor($this->createConnectionManager($args['relay']),  '*', '*', self::PRIORITY_DEFAULT);
 
         $socket = new \React\Socket\Server($loop);
 
